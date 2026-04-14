@@ -8,7 +8,10 @@ import com.atguigu.lease.web.app.mapper.*;
 import com.atguigu.lease.web.app.service.ApartmentInfoService;
 import com.atguigu.lease.web.app.vo.apartment.ApartmentDetailVo;
 import com.atguigu.lease.web.app.vo.apartment.ApartmentItemVo;
+import com.atguigu.lease.web.app.vo.apartment.ApartmentQueryVo;
 import com.atguigu.lease.web.app.vo.graph.GraphVo;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,11 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
 
     @Autowired
     private FacilityInfoMapper facilityInfoMapper;
+
+    @Override
+    public IPage<ApartmentItemVo> pageItem(Page<ApartmentItemVo> page, ApartmentQueryVo queryVo) {
+        return apartmentInfoMapper.pageItem(page, queryVo);
+    }
 
     @Override
     public ApartmentItemVo selectApartmentItemVoById(Long id) {
@@ -83,7 +91,6 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
         return apartmentDetailVo;
     }
 }
-
 
 
 

@@ -3,29 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lease App Demo</title>
+    <title>公寓租赁用户端</title>
     <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-<div class="app-shell">
-    <header class="hero">
-        <div class="hero-copy">
-            <p class="eyebrow">Tenant Portal</p>
-            <h1>公寓租赁演示前端</h1>
-            <p>最省时间的课程项目成品版，直接对接现有接口，包含登录、找房、预约、租约和浏览历史。</p>
-            <div class="hero-actions">
-                <span class="badge">演示验证码固定为 123456</span>
-                <a class="ghost-link" href="/doc.html" target="_blank" rel="noreferrer">接口文档</a>
-            </div>
-        </div>
-        <div class="hero-card">
-            <div class="account-head">
+<div class="user-shell">
+    <aside class="sidebar">
+        <div>
+            <div class="brand">
+                <span class="brand-mark">住</span>
                 <div>
-                    <strong id="profileName">游客模式</strong>
-                    <p id="profileMeta">登录后可查看个人预约和租约</p>
+                    <strong>租客找房中心</strong>
+                    <p>多层浏览界面，实时同步已发布的公寓与房间数据</p>
                 </div>
-                <button id="logoutBtn" class="ghost-btn">退出</button>
             </div>
+
+            <nav class="nav">
+                <button class="nav-btn is-active" data-page="discover" type="button">找房中心</button>
+                <button class="nav-btn" data-page="appointments" type="button">我的预约</button>
+                <button class="nav-btn" data-page="agreements" type="button">我的租约</button>
+                <button class="nav-btn" data-page="history" type="button">浏览历史</button>
+            </nav>
+        </div>
+
+        <div class="sidebar-card">
+            <div class="account-summary">
+                <strong id="profileName">游客模式</strong>
+                <p id="profileMeta">未登录也可以浏览公寓与房间，登录后可预约看房并查看个人记录</p>
+            </div>
+
             <form id="loginForm" class="login-form">
                 <label>
                     <span>手机号</span>
@@ -36,68 +42,112 @@
                     <input name="code" type="text" value="123456" required>
                 </label>
                 <button class="primary-btn" type="submit">登录 / 自动注册</button>
-                <p id="loginMessage" class="muted-text">新手机号也可以直接登录，系统会自动创建用户。</p>
+                <button id="logoutBtn" class="ghost-btn" type="button">退出登录</button>
+                <p id="loginMessage" class="muted-text">演示环境默认验证码为 123456，登录后会读取真实个人接口。</p>
             </form>
         </div>
-    </header>
+    </aside>
 
-    <main class="main-grid">
-        <section class="panel browse-panel">
-            <div class="section-head">
-                <div>
-                    <p class="eyebrow">Browse</p>
-                    <h2>房源列表</h2>
-                </div>
-                <form id="filterForm" class="filters">
-                    <input name="minRent" type="number" placeholder="最低租金">
-                    <input name="maxRent" type="number" placeholder="最高租金">
-                    <select name="orderType">
-                        <option value="">默认排序</option>
-                        <option value="asc">价格升序</option>
-                        <option value="desc">价格降序</option>
-                    </select>
-                    <button class="ghost-btn" type="submit">筛选</button>
-                </form>
+    <main class="content">
+        <header class="topbar">
+            <div>
+                <h1>租客端浏览台</h1>
+                <p id="apiHint">当前页面优先读取用户端实时数据，后台发布、编辑或删除公寓后，刷新这里即可同步。</p>
             </div>
-            <div id="roomList" class="room-grid"></div>
+            <div class="topbar-actions">
+                <span id="browseModeTag" class="status-pill ok">实时数据</span>
+                <button id="refreshBtn" class="ghost-btn" type="button">刷新数据</button>
+            </div>
+        </header>
+
+        <section id="discoverPage" class="page is-active">
+            <div class="workspace-head">
+                <div>
+                    <p class="eyebrow">找房中心</p>
+                    <h2>公寓列表 -> 房间列表 -> 详情与预约</h2>
+                </div>
+            </div>
+
+            <form id="discoverFilterForm" class="filter-bar">
+                <select id="provinceFilter" name="provinceId"></select>
+                <select id="cityFilter" name="cityId"></select>
+                <select id="districtFilter" name="districtId"></select>
+                <input name="minRent" type="number" placeholder="最低月租">
+                <input name="maxRent" type="number" placeholder="最高月租">
+                <select name="orderType">
+                    <option value="">默认排序</option>
+                    <option value="asc">月租升序</option>
+                    <option value="desc">月租降序</option>
+                </select>
+                <button class="ghost-btn" type="submit">应用筛选</button>
+                <button id="resetFiltersBtn" class="ghost-btn" type="button">重置条件</button>
+            </form>
+
+            <div class="discover-grid">
+                <section class="panel list-panel">
+                    <div class="panel-head">
+                        <div>
+                            <p class="eyebrow">第一层</p>
+                            <h3>公寓社区</h3>
+                        </div>
+                        <span id="apartmentCount" class="count-chip">0 个公寓</span>
+                    </div>
+                    <div id="apartmentList" class="card-list"></div>
+                </section>
+
+                <section class="panel list-panel">
+                    <div class="panel-head">
+                        <div>
+                            <p class="eyebrow">第二层</p>
+                            <h3>可租房间</h3>
+                        </div>
+                        <span id="roomCount" class="count-chip">0 个房间</span>
+                    </div>
+                    <div id="roomList" class="card-list"></div>
+                </section>
+
+                <section class="panel detail-panel">
+                    <div id="roomDetail" class="empty-state">先从左侧选择一个公寓，右侧会显示公寓概览、房间详情和预约入口。</div>
+                </section>
+            </div>
         </section>
 
-        <aside class="panel detail-panel">
-            <div id="roomDetail" class="empty-state">点击左侧房源查看详情，并可直接提交预约。</div>
-        </aside>
+        <section id="appointmentsPage" class="page">
+            <div class="workspace-head">
+                <div>
+                    <p class="eyebrow">我的预约</p>
+                    <h2>看房预约记录</h2>
+                </div>
+            </div>
+            <div class="panel">
+                <div id="appointmentList" class="stack-list"></div>
+            </div>
+        </section>
+
+        <section id="agreementsPage" class="page">
+            <div class="workspace-head">
+                <div>
+                    <p class="eyebrow">我的租约</p>
+                    <h2>租约与签约信息</h2>
+                </div>
+            </div>
+            <div class="panel">
+                <div id="agreementList" class="stack-list"></div>
+            </div>
+        </section>
+
+        <section id="historyPage" class="page">
+            <div class="workspace-head">
+                <div>
+                    <p class="eyebrow">浏览历史</p>
+                    <h2>最近查看过的房间</h2>
+                </div>
+            </div>
+            <div class="panel">
+                <div id="historyList" class="stack-list"></div>
+            </div>
+        </section>
     </main>
-
-    <section class="dashboard-grid">
-        <section class="panel">
-            <div class="section-head">
-                <div>
-                    <p class="eyebrow">Appointment</p>
-                    <h2>我的预约</h2>
-                </div>
-            </div>
-            <div id="appointmentList" class="stack-list"></div>
-        </section>
-
-        <section class="panel">
-            <div class="section-head">
-                <div>
-                    <p class="eyebrow">Agreement</p>
-                    <h2>我的租约</h2>
-                </div>
-            </div>
-            <div id="agreementList" class="stack-list"></div>
-        </section>
-
-        <section class="panel">
-            <div class="section-head">
-                <div>
-                    <p class="eyebrow">History</p>
-                    <h2>浏览历史</h2>
-                </div>
-            </div>
-            <div id="historyList" class="stack-list"></div>
-        </section>
-    </section>
 </div>
 
 <script src="./app.js"></script>

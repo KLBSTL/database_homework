@@ -4,4 +4,80 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.lease.web.app.mapper.ApartmentInfoMapper">
 
+    <resultMap id="ApartmentItemVoMap" type="com.atguigu.lease.web.app.vo.apartment.ApartmentItemVo" autoMapping="true">
+        <id column="id" property="id"/>
+        <collection property="graphVoList"
+                    ofType="com.atguigu.lease.web.app.vo.graph.GraphVo"
+                    select="selectGraphListByApartmentId"
+                    column="id"/>
+        <collection property="labelInfoList"
+                    ofType="com.atguigu.lease.model.entity.LabelInfo"
+                    select="selectLabelListByApartmentId"
+                    column="id"/>
+    </resultMap>
+
+    <select id="pageItem" resultMap="ApartmentItemVoMap">
+        select
+            ai.id,
+            ai.name,
+            ai.introduction,
+            ai.district_id,
+            ai.district_name,
+            ai.city_id,
+            ai.city_name,
+            ai.province_id,
+            ai.province_name,
+            ai.address_detail,
+            ai.latitude,
+            ai.longitude,
+            ai.phone,
+            ai.is_release,
+            mr.min_rent
+        from apartment_info ai
+        left join (
+            select apartment_id, min(rent) min_rent
+            from room_info
+            where is_deleted = 0
+            group by apartment_id
+        ) mr on ai.id = mr.apartment_id
+        <where>
+            ai.is_deleted = 0
+            <if test="queryVo.provinceId != null">
+                and ai.province_id = #{queryVo.provinceId}
+            </if>
+            <if test="queryVo.cityId != null">
+                and ai.city_id = #{queryVo.cityId}
+            </if>
+            <if test="queryVo.districtId != null">
+                and ai.district_id = #{queryVo.districtId}
+            </if>
+        </where>
+        order by ai.id desc
+    </select>
+
+    <select id="selectGraphListByApartmentId" resultType="com.atguigu.lease.web.app.vo.graph.GraphVo">
+        select
+            name,
+            url
+        from graph_info
+        where is_deleted = 0
+          and item_type = 1
+          and item_id = #{id}
+    </select>
+
+    <select id="selectLabelListByApartmentId" resultType="com.atguigu.lease.model.entity.LabelInfo">
+        select
+            id,
+            type,
+            name
+        from label_info
+        where is_deleted = 0
+          and id in (
+            select label_id
+            from apartment_label
+            where is_deleted = 0
+              and apartment_id = #{id}
+          )
+    </select>
+
 </mapper>

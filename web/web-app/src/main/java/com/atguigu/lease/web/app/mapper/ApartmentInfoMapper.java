@@ -2,7 +2,10 @@ package com.atguigu.lease.web.app.mapper;
 
 import com.atguigu.lease.model.entity.ApartmentInfo;
 import com.atguigu.lease.web.app.vo.apartment.ApartmentItemVo;
+import com.atguigu.lease.web.app.vo.apartment.ApartmentQueryVo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 /**
 * @author liubo
@@ -11,9 +14,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity com.atguigu.lease.model.entity.ApartmentInfo
 */
 public interface ApartmentInfoMapper extends BaseMapper<ApartmentInfo> {
+    IPage<ApartmentItemVo> pageItem(Page<ApartmentItemVo> page, ApartmentQueryVo queryVo);
 
 }
-
 
 
 

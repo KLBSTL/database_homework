@@ -3,6 +3,9 @@ package com.atguigu.lease.web.app.service;
 import com.atguigu.lease.model.entity.ApartmentInfo;
 import com.atguigu.lease.web.app.vo.apartment.ApartmentDetailVo;
 import com.atguigu.lease.web.app.vo.apartment.ApartmentItemVo;
+import com.atguigu.lease.web.app.vo.apartment.ApartmentQueryVo;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +14,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @createDate 2023-07-26 11:12:39
  */
 public interface ApartmentInfoService extends IService<ApartmentInfo> {
+    IPage<ApartmentItemVo> pageItem(Page<ApartmentItemVo> page, ApartmentQueryVo queryVo);
+
     ApartmentItemVo selectApartmentItemVoById(Long id);
 
     ApartmentDetailVo getApartmentDetailById(Long id);

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lease Admin Console</title>
+    <title>公寓租赁后台管理</title>
     <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
@@ -11,17 +11,17 @@
     <aside class="sidebar">
         <div>
             <div class="brand">
-                <span class="brand-mark">L</span>
+                <span class="brand-mark">租</span>
                 <div>
-                    <strong>Lease Admin</strong>
-                    <p>课程项目演示后台</p>
+                    <strong>公寓租赁后台</strong>
+                    <p>课程项目管理控制台</p>
                 </div>
             </div>
             <nav class="nav">
-                <button class="nav-btn is-active" data-page="summary">总览</button>
-                <button class="nav-btn" data-page="apartments">公寓管理</button>
-                <button class="nav-btn" data-page="rooms">房间管理</button>
-                <button class="nav-btn" data-page="users">用户管理</button>
+                <button class="nav-btn is-active" data-page="summary" type="button">项目总览</button>
+                <button class="nav-btn" data-page="apartments" type="button">公寓管理</button>
+                <button class="nav-btn" data-page="rooms" type="button">房间管理</button>
+                <button class="nav-btn" data-page="users" type="button">后台账号</button>
             </nav>
         </div>
         <div class="sidebar-card">
@@ -36,73 +36,118 @@
         <header class="topbar">
             <div>
                 <h1>租赁管理控制台</h1>
-                <p>静态前端直接对接 Spring Boot 接口，适合课程演示和答辩。</p>
+                <p>采用多层管理界面，支持公寓、房间、后台账号的增删查改和数据库联动展示。</p>
             </div>
             <div class="topbar-actions">
                 <div class="profile-card">
                     <span id="profileName">未登录</span>
                     <small id="profileMeta">等待身份校验</small>
                 </div>
-                <button id="refreshBtn" class="ghost-btn">刷新数据</button>
-                <button id="logoutBtn" class="ghost-btn danger">退出</button>
+                <button id="refreshBtn" class="ghost-btn" type="button">刷新数据</button>
+                <button id="logoutBtn" class="ghost-btn danger" type="button">退出登录</button>
             </div>
         </header>
 
         <section id="summaryPage" class="page is-active">
             <div class="hero">
                 <div>
-                    <p class="eyebrow">Dashboard</p>
-                    <h2>项目概览</h2>
-                    <p id="summaryIntro">登录后可查看公寓、房间、租约和预约的整体情况。</p>
+                    <p class="eyebrow">项目总览</p>
+                    <h2>前后端与数据库联动展示</h2>
+                    <p id="summaryIntro">登录后可以查看系统统计、数据库操作能力，以及课程答辩可演示的核心业务模块。</p>
                 </div>
-                <div class="hero-chip">前后端一体演示版</div>
+                <div class="hero-chip">三层工作区 + 抽屉编辑层</div>
             </div>
             <div id="summaryCards" class="metric-grid"></div>
+            <div class="stage-grid">
+                <article class="panel stage-card">
+                    <p class="eyebrow">界面结构</p>
+                    <h3>多层后台操作台</h3>
+                    <p>左侧导航负责模块切换，中间工作区负责筛选和列表，右侧详情区负责预览，抽屉层负责新增和编辑。</p>
+                </article>
+                <article class="panel stage-card">
+                    <p class="eyebrow">数据库操作</p>
+                    <h3>可直接演示 CRUD</h3>
+                    <p>公寓、房间、后台账号都支持新增、查询、修改、删除，发布状态和账号状态也支持直接更新。</p>
+                </article>
+            </div>
         </section>
 
         <section id="apartmentsPage" class="page">
-            <div class="section-head">
+            <div class="workspace-head">
                 <div>
-                    <p class="eyebrow">Apartment</p>
-                    <h2>公寓管理</h2>
+                    <p class="eyebrow">公寓管理</p>
+                    <h2>公寓信息增删查改</h2>
                 </div>
+                <div class="workspace-actions">
+                    <button id="apartmentCreateBtn" class="primary-btn" type="button">新增公寓</button>
+                </div>
+            </div>
+            <div class="filter-bar">
+                <select id="apartmentProvinceFilter"></select>
+                <select id="apartmentCityFilter"></select>
+                <select id="apartmentDistrictFilter"></select>
+                <button id="apartmentFilterBtn" class="ghost-btn" type="button">筛选</button>
+                <button id="apartmentResetBtn" class="ghost-btn" type="button">重置</button>
             </div>
             <div class="panel-grid">
                 <div id="apartmentList" class="panel list-panel"></div>
-                <div id="apartmentDetail" class="panel detail-panel empty-state">选择左侧公寓查看详情</div>
+                <div id="apartmentDetail" class="panel detail-panel empty-state">选择左侧公寓查看详情，或点击上方按钮新增公寓。</div>
             </div>
         </section>
 
         <section id="roomsPage" class="page">
-            <div class="section-head">
+            <div class="workspace-head">
                 <div>
-                    <p class="eyebrow">Room</p>
-                    <h2>房间管理</h2>
+                    <p class="eyebrow">房间管理</p>
+                    <h2>房间信息增删查改</h2>
                 </div>
+                <div class="workspace-actions">
+                    <button id="roomCreateBtn" class="primary-btn" type="button">新增房间</button>
+                </div>
+            </div>
+            <div class="filter-bar">
+                <select id="roomProvinceFilter"></select>
+                <select id="roomCityFilter"></select>
+                <select id="roomDistrictFilter"></select>
+                <select id="roomApartmentFilter"></select>
+                <button id="roomFilterBtn" class="ghost-btn" type="button">筛选</button>
+                <button id="roomResetBtn" class="ghost-btn" type="button">重置</button>
             </div>
             <div class="panel-grid">
                 <div id="roomList" class="panel list-panel"></div>
-                <div id="roomDetail" class="panel detail-panel empty-state">选择左侧房间查看详情</div>
+                <div id="roomDetail" class="panel detail-panel empty-state">选择左侧房间查看详情，或点击上方按钮新增房间。</div>
             </div>
         </section>
 
         <section id="usersPage" class="page">
-            <div class="section-head">
+            <div class="workspace-head">
                 <div>
-                    <p class="eyebrow">User</p>
-                    <h2>用户管理</h2>
+                    <p class="eyebrow">后台账号</p>
+                    <h2>后台账号增删查改</h2>
+                </div>
+                <div class="workspace-actions">
+                    <button id="systemUserCreateBtn" class="primary-btn" type="button">新增账号</button>
                 </div>
             </div>
-            <div id="userTable" class="panel table-panel"></div>
+            <div class="filter-bar">
+                <input id="systemUserNameFilter" type="text" placeholder="按姓名筛选">
+                <input id="systemUserPhoneFilter" type="text" placeholder="按手机号筛选">
+                <button id="systemUserFilterBtn" class="ghost-btn" type="button">筛选</button>
+                <button id="systemUserResetBtn" class="ghost-btn" type="button">重置</button>
+            </div>
+            <div class="panel-grid">
+                <div id="systemUserList" class="panel list-panel"></div>
+                <div id="systemUserDetail" class="panel detail-panel empty-state">选择左侧账号查看详情，或点击上方按钮新增后台账号。</div>
+            </div>
         </section>
     </main>
 </div>
 
 <div id="loginOverlay" class="overlay">
     <form id="loginForm" class="login-card">
-        <p class="eyebrow">Admin Login</p>
+        <p class="eyebrow">后台登录</p>
         <h2>进入后台控制台</h2>
-        <p class="login-tip">用于课程答辩的简洁演示后台，登录后自动拉取汇总和管理数据。</p>
+        <p class="login-tip">登录后优先读取真实后端和数据库数据；如果当前环境未完全准备好，页面会自动切换到本地演示模式。</p>
         <label>
             <span>用户名</span>
             <input name="username" type="text" value="admin" required>
@@ -124,6 +169,21 @@
     </form>
 </div>
 
+<div id="drawerOverlay" class="drawer-overlay is-hidden">
+    <div class="drawer-backdrop"></div>
+    <section class="drawer-panel">
+        <header class="drawer-head">
+            <div>
+                <p id="drawerEyebrow" class="eyebrow">编辑</p>
+                <h3 id="drawerTitle">表单</h3>
+            </div>
+            <button id="drawerCloseBtn" class="ghost-btn" type="button">关闭</button>
+        </header>
+        <div id="drawerBody" class="drawer-body"></div>
+    </section>
+</div>
+
 <script src="./app.js"></script>
+<script src="./crud.js"></script>
 </body>
 </html>
