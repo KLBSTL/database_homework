@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Thu Apr 09 23:12:45 GMT+08:00 2026
+@default-aliyunmaven-https\://maven.aliyun.com/repository/public/.lastUpdated=1775747565850
+https\://maven.aliyun.com/repository/public/.error=Could not transfer artifact org.apache.maven.plugins\:maven-invoker-plugin\:pom\:3.3.0 from/to aliyunmaven (https\://maven.aliyun.com/repository/public)\: Permission denied\: getsockopt

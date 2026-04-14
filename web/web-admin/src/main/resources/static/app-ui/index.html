@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lease App Demo</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div class="app-shell">
+    <header class="hero">
+        <div class="hero-copy">
+            <p class="eyebrow">Tenant Portal</p>
+            <h1>公寓租赁演示前端</h1>
+            <p>最省时间的课程项目成品版，直接对接现有接口，包含登录、找房、预约、租约和浏览历史。</p>
+            <div class="hero-actions">
+                <span class="badge">演示验证码固定为 123456</span>
+                <a class="ghost-link" href="/doc.html" target="_blank" rel="noreferrer">接口文档</a>
+            </div>
+        </div>
+        <div class="hero-card">
+            <div class="account-head">
+                <div>
+                    <strong id="profileName">游客模式</strong>
+                    <p id="profileMeta">登录后可查看个人预约和租约</p>
+                </div>
+                <button id="logoutBtn" class="ghost-btn">退出</button>
+            </div>
+            <form id="loginForm" class="login-form">
+                <label>
+                    <span>手机号</span>
+                    <input name="phone" type="text" value="13888888888" required>
+                </label>
+                <label>
+                    <span>验证码</span>
+                    <input name="code" type="text" value="123456" required>
+                </label>
+                <button class="primary-btn" type="submit">登录 / 自动注册</button>
+                <p id="loginMessage" class="muted-text">新手机号也可以直接登录，系统会自动创建用户。</p>
+            </form>
+        </div>
+    </header>
+
+    <main class="main-grid">
+        <section class="panel browse-panel">
+            <div class="section-head">
+                <div>
+                    <p class="eyebrow">Browse</p>
+                    <h2>房源列表</h2>
+                </div>
+                <form id="filterForm" class="filters">
+                    <input name="minRent" type="number" placeholder="最低租金">
+                    <input name="maxRent" type="number" placeholder="最高租金">
+                    <select name="orderType">
+                        <option value="">默认排序</option>
+                        <option value="asc">价格升序</option>
+                        <option value="desc">价格降序</option>
+                    </select>
+                    <button class="ghost-btn" type="submit">筛选</button>
+                </form>
+            </div>
+            <div id="roomList" class="room-grid"></div>
+        </section>
+
+        <aside class="panel detail-panel">
+            <div id="roomDetail" class="empty-state">点击左侧房源查看详情，并可直接提交预约。</div>
+        </aside>
+    </main>
+
+    <section class="dashboard-grid">
+        <section class="panel">
+            <div class="section-head">
+                <div>
+                    <p class="eyebrow">Appointment</p>
+                    <h2>我的预约</h2>
+                </div>
+            </div>
+            <div id="appointmentList" class="stack-list"></div>
+        </section>
+
+        <section class="panel">
+            <div class="section-head">
+                <div>
+                    <p class="eyebrow">Agreement</p>
+                    <h2>我的租约</h2>
+                </div>
+            </div>
+            <div id="agreementList" class="stack-list"></div>
+        </section>
+
+        <section class="panel">
+            <div class="section-head">
+                <div>
+                    <p class="eyebrow">History</p>
+                    <h2>浏览历史</h2>
+                </div>
+            </div>
+            <div id="historyList" class="stack-list"></div>
+        </section>
+    </section>
+</div>
+
+<script src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+:root {
+    --bg: #f4f8fb;
+    --surface: rgba(255, 255, 255, 0.86);
+    --surface-strong: #ffffff;
+    --ink: #172033;
+    --muted: #5f6b7b;
+    --line: rgba(148, 163, 184, 0.24);
+    --brand: #0f766e;
+    --brand-soft: #14b8a6;
+    --accent: #f59e0b;
+    --danger: #b42318;
+    --shadow: 0 22px 48px rgba(15, 118, 110, 0.12);
+    font-family: "Segoe UI", "PingFang SC", sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    color: var(--ink);
+    background:
+        radial-gradient(circle at top right, rgba(20, 184, 166, 0.12), transparent 25%),
+        radial-gradient(circle at left, rgba(245, 158, 11, 0.12), transparent 24%),
+        linear-gradient(180deg, #f5fbfa 0%, #eef4fb 100%);
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+.app-shell {
+    padding: 24px;
+}
+
+.hero,
+.panel,
+.hero-card,
+.room-card,
+.detail-banner {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(18px);
+}
+
+.hero {
+    border-radius: 34px;
+    padding: 28px;
+    display: grid;
+    grid-template-columns: 1.3fr 0.9fr;
+    gap: 20px;
+}
+
+.hero-copy h1,
+.section-head h2,
+.detail-panel h2 {
+    margin: 0;
+}
+
+.eyebrow {
+    margin: 0 0 10px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--brand);
+}
+
+.hero-actions,
+.account-head,
+.filters,
+.detail-meta,
+.detail-grid,
+.appointment-form,
+.main-grid,
+.dashboard-grid,
+.room-grid {
+    display: grid;
+    gap: 14px;
+}
+
+.hero-actions {
+    grid-auto-flow: column;
+    justify-content: start;
+    margin-top: 20px;
+}
+
+.badge,
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+}
+
+.badge {
+    color: #fff;
+    background: linear-gradient(135deg, var(--brand), var(--brand-soft));
+}
+
+.ghost-link,
+.ghost-btn,
+.primary-btn {
+    border-radius: 16px;
+    text-decoration: none;
+    border: 0;
+    cursor: pointer;
+    transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+.ghost-link,
+.ghost-btn {
+    padding: 10px 14px;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.88);
+}
+
+.primary-btn {
+    padding: 12px 16px;
+    color: #fff;
+    background: linear-gradient(135deg, var(--brand), #0b5c5b);
+}
+
+.hero-card,
+.panel {
+    border-radius: 28px;
+    padding: 22px;
+}
+
+.account-head {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+}
+
+.account-head p,
+.muted-text,
+.empty-state,
+.stack-item p,
+.room-card p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.login-form,
+.filters {
+    margin-top: 16px;
+}
+
+.login-form label,
+.appointment-form label {
+    display: grid;
+    gap: 8px;
+}
+
+.login-form input,
+.filters input,
+.filters select,
+.appointment-form input,
+.appointment-form textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.96);
+}
+
+.appointment-form textarea {
+    min-height: 96px;
+    resize: vertical;
+}
+
+.main-grid {
+    margin-top: 20px;
+    grid-template-columns: 1.2fr 0.8fr;
+}
+
+.browse-panel .section-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: start;
+}
+
+.filters {
+    grid-template-columns: repeat(4, minmax(110px, 1fr));
+}
+
+.room-grid {
+    margin-top: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.room-card {
+    overflow: hidden;
+    border-radius: 24px;
+}
+
+.room-cover {
+    height: 150px;
+    background: linear-gradient(135deg, rgba(15, 118, 110, 0.8), rgba(245, 158, 11, 0.7));
+    background-size: cover;
+    background-position: center;
+}
+
+.room-body {
+    padding: 16px;
+}
+
+.room-body h3,
+.stack-item h3 {
+    margin: 0 0 8px;
+}
+
+.detail-banner {
+    overflow: hidden;
+    min-height: 170px;
+    border-radius: 24px;
+    background-size: cover;
+    background-position: center;
+}
+
+.detail-panel {
+    align-self: start;
+}
+
+.detail-content {
+    margin-top: 16px;
+}
+
+.detail-meta {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.detail-grid {
+    margin-top: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.status-pill.ok {
+    color: var(--brand);
+    background: rgba(15, 118, 110, 0.12);
+}
+
+.status-pill.warn {
+    color: #a16207;
+    background: rgba(161, 98, 7, 0.12);
+}
+
+.status-pill.danger {
+    color: var(--danger);
+    background: rgba(180, 35, 24, 0.12);
+}
+
+.dashboard-grid {
+    margin-top: 20px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.stack-list {
+    margin-top: 10px;
+}
+
+.stack-item {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.stack-item:last-child {
+    border-bottom: 0;
+}
+
+.empty-state {
+    min-height: 220px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+}
+
+@media (max-width: 1100px) {
+    .hero,
+    .main-grid,
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    .app-shell {
+        padding: 16px;
+    }
+
+    .hero,
+    .panel,
+    .hero-card {
+        padding: 18px;
+    }
+
+    .browse-panel .section-head {
+        flex-direction: column;
+    }
+
+    .filters {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-actions {
+        grid-auto-flow: row;
+    }
+}

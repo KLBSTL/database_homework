@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lease Admin Console</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div class="admin-shell">
+    <aside class="sidebar">
+        <div>
+            <div class="brand">
+                <span class="brand-mark">L</span>
+                <div>
+                    <strong>Lease Admin</strong>
+                    <p>课程项目演示后台</p>
+                </div>
+            </div>
+            <nav class="nav">
+                <button class="nav-btn is-active" data-page="summary">总览</button>
+                <button class="nav-btn" data-page="apartments">公寓管理</button>
+                <button class="nav-btn" data-page="rooms">房间管理</button>
+                <button class="nav-btn" data-page="users">用户管理</button>
+            </nav>
+        </div>
+        <div class="sidebar-card">
+            <p>默认后台账号</p>
+            <strong>admin / 123456</strong>
+            <a href="/doc.html" target="_blank" rel="noreferrer">打开接口文档</a>
+            <a href="/app-ui/index.html" target="_blank" rel="noreferrer">打开用户端演示</a>
+        </div>
+    </aside>
+
+    <main class="content">
+        <header class="topbar">
+            <div>
+                <h1>租赁管理控制台</h1>
+                <p>静态前端直接对接 Spring Boot 接口，适合课程演示和答辩。</p>
+            </div>
+            <div class="topbar-actions">
+                <div class="profile-card">
+                    <span id="profileName">未登录</span>
+                    <small id="profileMeta">等待身份校验</small>
+                </div>
+                <button id="refreshBtn" class="ghost-btn">刷新数据</button>
+                <button id="logoutBtn" class="ghost-btn danger">退出</button>
+            </div>
+        </header>
+
+        <section id="summaryPage" class="page is-active">
+            <div class="hero">
+                <div>
+                    <p class="eyebrow">Dashboard</p>
+                    <h2>项目概览</h2>
+                    <p id="summaryIntro">登录后可查看公寓、房间、租约和预约的整体情况。</p>
+                </div>
+                <div class="hero-chip">前后端一体演示版</div>
+            </div>
+            <div id="summaryCards" class="metric-grid"></div>
+        </section>
+
+        <section id="apartmentsPage" class="page">
+            <div class="section-head">
+                <div>
+                    <p class="eyebrow">Apartment</p>
+                    <h2>公寓管理</h2>
+                </div>
+            </div>
+            <div class="panel-grid">
+                <div id="apartmentList" class="panel list-panel"></div>
+                <div id="apartmentDetail" class="panel detail-panel empty-state">选择左侧公寓查看详情</div>
+            </div>
+        </section>
+
+        <section id="roomsPage" class="page">
+            <div class="section-head">
+                <div>
+                    <p class="eyebrow">Room</p>
+                    <h2>房间管理</h2>
+                </div>
+            </div>
+            <div class="panel-grid">
+                <div id="roomList" class="panel list-panel"></div>
+                <div id="roomDetail" class="panel detail-panel empty-state">选择左侧房间查看详情</div>
+            </div>
+        </section>
+
+        <section id="usersPage" class="page">
+            <div class="section-head">
+                <div>
+                    <p class="eyebrow">User</p>
+                    <h2>用户管理</h2>
+                </div>
+            </div>
+            <div id="userTable" class="panel table-panel"></div>
+        </section>
+    </main>
+</div>
+
+<div id="loginOverlay" class="overlay">
+    <form id="loginForm" class="login-card">
+        <p class="eyebrow">Admin Login</p>
+        <h2>进入后台控制台</h2>
+        <p class="login-tip">用于课程答辩的简洁演示后台，登录后自动拉取汇总和管理数据。</p>
+        <label>
+            <span>用户名</span>
+            <input name="username" type="text" value="admin" required>
+        </label>
+        <label>
+            <span>密码</span>
+            <input name="password" type="password" value="123456" required>
+        </label>
+        <label>
+            <span>验证码（演示模式可留空）</span>
+            <div class="captcha-row">
+                <input name="captchaCode" type="text" placeholder="演示模式可不填">
+                <button id="captchaBtn" class="ghost-btn" type="button">刷新</button>
+            </div>
+        </label>
+        <div id="captchaImage" class="captcha-image">演示模式下可直接登录</div>
+        <button class="primary-btn" type="submit">登录并进入系统</button>
+        <p id="loginMessage" class="form-message"></p>
+    </form>
+</div>
+
+<script src="./app.js"></script>
+</body>
+</html>
