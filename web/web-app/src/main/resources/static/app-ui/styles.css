@@ -51,7 +51,7 @@ button {
     padding: 28px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 24px;
     background: var(--surface-dark);
     color: #f8fafc;

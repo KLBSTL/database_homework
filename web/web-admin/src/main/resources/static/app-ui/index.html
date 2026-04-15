@@ -34,11 +34,11 @@
     <h1>正在进入用户端</h1>
     <p>后台入口上的用户端地址会自动跳转到真实的用户前台服务，这样才能读取和后台一致的公寓、房间与个人数据。</p>
     <p>如果没有自动跳转，请先启动用户端服务，再访问：
-        <a id="targetLink" href="http://localhost:8082/app-ui/index.html">http://localhost:8082/app-ui/index.html</a>
+        <a id="targetLink" href="http://localhost:18082/app-ui/index.html">http://localhost:18082/app-ui/index.html</a>
     </p>
 </div>
 <script>
-    const target = `${window.location.protocol}//${window.location.hostname || "localhost"}:8082/app-ui/index.html`;
+    const target = `${window.location.protocol}//${window.location.hostname || "localhost"}:18082/app-ui/index.html`;
     document.getElementById("targetLink").href = target;
     document.getElementById("targetLink").textContent = target;
     window.location.replace(target);

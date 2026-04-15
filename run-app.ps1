@@ -30,7 +30,16 @@ if ($AliyunSmsAccessKeyId) { $env:ALIYUN_SMS_ACCESS_KEY_ID = $AliyunSmsAccessKey
 if ($AliyunSmsAccessKeySecret) { $env:ALIYUN_SMS_ACCESS_KEY_SECRET = $AliyunSmsAccessKeySecret }
 if ($AliyunSmsEndpoint) { $env:ALIYUN_SMS_ENDPOINT = $AliyunSmsEndpoint }
 
-$jarPath = Join-Path $PSScriptRoot "web\\web-app\\target\\web-app-1.0-SNAPSHOT.jar"
+$runtimeJar = Get-ChildItem -Path (Join-Path $PSScriptRoot ".runtime") -Filter "web-app-*.jar" -ErrorAction SilentlyContinue |
+    Sort-Object LastWriteTime -Descending |
+    Select-Object -First 1
+
+$jarPath = if ($runtimeJar) {
+    $runtimeJar.FullName
+} else {
+    Join-Path $PSScriptRoot "web\\web-app\\target\\web-app-1.0-SNAPSHOT.jar"
+}
+
 if (-not (Test-Path $jarPath)) {
     throw "Jar not found: $jarPath. Run build.ps1 first."
 }

@@ -182,15 +182,7 @@
 
     async function resolveData(realAction, mockAction) {
         if (App.isDemoMode()) return mockAction();
-        try {
-            return await realAction();
-        } catch (error) {
-            if (!App.shouldFallback(error)) throw error;
-            App.enableDemo(error.message);
-            await App.loadCommonRefs();
-            await App.loadSummary();
-            return mockAction();
-        }
+        return await realAction();
     }
 
     async function syncApartmentFilterSelects() {
@@ -1024,8 +1016,11 @@
             if (action === "delete") {
                 if (!window.confirm("确定删除该公寓吗？")) return;
                 await removeApartment(id);
+                state.apartments.selectedId = null;
+                state.apartments.detail = null;
+                renderApartmentDetail(null);
                 await App.loadSummary();
-                await loadApartments();
+                await loadApartments(null);
             }
             if (action === "toggle") {
                 await updateApartmentStatus(id, status);
@@ -1049,8 +1044,11 @@
             if (action === "delete") {
                 if (!window.confirm("确定删除该房间吗？")) return;
                 await removeRoom(id);
+                state.rooms.selectedId = null;
+                state.rooms.detail = null;
+                renderRoomDetail(null);
                 await App.loadSummary();
-                await loadRooms();
+                await loadRooms(null);
             }
             if (action === "toggle") {
                 await updateRoomStatus(id, status);
@@ -1176,16 +1174,18 @@
             bindOnce();
             state.bootstrapped = true;
         }
-        await syncApartmentFilterSelects();
-        await syncRoomFilterSelects();
-        await loadApartments();
-        await loadRooms();
-        await loadSystemUsers();
+        return activatePage(App.state.currentPage);
     }
 
     async function activatePage(page) {
-        if (page === "apartments") return loadApartments();
-        if (page === "rooms") return loadRooms();
+        if (page === "apartments") {
+            await syncApartmentFilterSelects();
+            return loadApartments();
+        }
+        if (page === "rooms") {
+            await syncRoomFilterSelects();
+            return loadRooms();
+        }
         if (page === "users") return loadSystemUsers();
         if (page === "summary") return App.loadSummary();
         return null;

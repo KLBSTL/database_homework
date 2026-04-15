@@ -32,7 +32,16 @@ if ($MinioAccessKey) { $env:MINIO_ACCESS_KEY = $MinioAccessKey }
 if ($MinioSecretKey) { $env:MINIO_SECRET_KEY = $MinioSecretKey }
 if ($MinioBucketName) { $env:MINIO_BUCKET_NAME = $MinioBucketName }
 
-$jarPath = Join-Path $PSScriptRoot "web\\web-admin\\target\\web-admin-1.0-SNAPSHOT.jar"
+$runtimeJar = Get-ChildItem -Path (Join-Path $PSScriptRoot ".runtime") -Filter "web-admin-*.jar" -ErrorAction SilentlyContinue |
+    Sort-Object LastWriteTime -Descending |
+    Select-Object -First 1
+
+$jarPath = if ($runtimeJar) {
+    $runtimeJar.FullName
+} else {
+    Join-Path $PSScriptRoot "web\\web-admin\\target\\web-admin-1.0-SNAPSHOT.jar"
+}
+
 if (-not (Test-Path $jarPath)) {
     throw "Jar not found: $jarPath. Run build.ps1 first."
 }

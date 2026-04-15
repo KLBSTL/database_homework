@@ -3,7 +3,7 @@
     const PHONE_KEY = "lease_app_phone";
     const DEMO_TOKEN = "FRONTEND_DEMO_APP";
     const API_BASE = window.location.port === "8081"
-        ? `${window.location.protocol}//${window.location.hostname || "localhost"}:8082`
+        ? `${window.location.protocol}//${window.location.hostname || "localhost"}:18082`
         : "";
 
     const state = {
@@ -320,7 +320,7 @@
         if (!reason) return "公共接口暂时不可用，已切换到演示数据。";
         if (reason === "Failed to fetch") {
             return API_BASE
-                ? "无法连接到 8082 用户端服务，请确认用户端已经启动。"
+                ? "无法连接到 18082 用户端服务，请确认用户端已经启动。"
                 : "无法连接到用户端服务，请检查后端是否正在运行。";
         }
         if (/HTTP\\s+401/i.test(reason)) return "当前登录态已失效，请重新登录。";

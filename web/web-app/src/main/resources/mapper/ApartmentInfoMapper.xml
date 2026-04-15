@@ -42,6 +42,7 @@
         ) mr on ai.id = mr.apartment_id
         <where>
             ai.is_deleted = 0
+            and ai.is_release = 1
             <if test="queryVo.provinceId != null">
                 and ai.province_id = #{queryVo.provinceId}
             </if>

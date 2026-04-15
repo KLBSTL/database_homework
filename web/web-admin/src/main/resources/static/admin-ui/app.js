@@ -345,6 +345,17 @@
         return state.demoData || state.token === DEMO_TOKEN;
     }
 
+    function pickSettledValue(results, index, mockValue) {
+        const item = results[index];
+        if (item && item.status === "fulfilled") {
+            const value = Array.isArray(item.value) ? item.value : [];
+            if (value.length > 0) {
+                return value;
+            }
+        }
+        return clone(mockValue || []);
+    }
+
     function getMockCities(provinceId) {
         return clone(mock.refs.citiesByProvince[provinceId] || []);
     }
@@ -492,18 +503,7 @@
             return;
         }
 
-        const [
-            provinces,
-            apartmentFacilities,
-            roomFacilities,
-            apartmentLabels,
-            roomLabels,
-            feeGroups,
-            attrGroups,
-            paymentTypes,
-            leaseTerms,
-            posts
-        ] = await Promise.all([
+        const results = await Promise.allSettled([
             request("/admin/region/province/list"),
             request("/admin/facility/list?type=APARTMENT"),
             request("/admin/facility/list?type=ROOM"),
@@ -516,16 +516,16 @@
             request("/admin/system/post/list")
         ]);
 
-        state.refs.provinces = provinces || [];
-        state.refs.apartmentFacilities = apartmentFacilities || [];
-        state.refs.roomFacilities = roomFacilities || [];
-        state.refs.apartmentLabels = apartmentLabels || [];
-        state.refs.roomLabels = roomLabels || [];
-        state.refs.feeGroups = feeGroups || [];
-        state.refs.attrGroups = attrGroups || [];
-        state.refs.paymentTypes = paymentTypes || [];
-        state.refs.leaseTerms = leaseTerms || [];
-        state.refs.posts = posts || [];
+        state.refs.provinces = pickSettledValue(results, 0, mock.refs.provinces);
+        state.refs.apartmentFacilities = pickSettledValue(results, 1, mock.refs.apartmentFacilities);
+        state.refs.roomFacilities = pickSettledValue(results, 2, mock.refs.roomFacilities);
+        state.refs.apartmentLabels = pickSettledValue(results, 3, mock.refs.apartmentLabels);
+        state.refs.roomLabels = pickSettledValue(results, 4, mock.refs.roomLabels);
+        state.refs.feeGroups = pickSettledValue(results, 5, mock.refs.feeGroups);
+        state.refs.attrGroups = pickSettledValue(results, 6, mock.refs.attrGroups);
+        state.refs.paymentTypes = pickSettledValue(results, 7, mock.refs.paymentTypes);
+        state.refs.leaseTerms = pickSettledValue(results, 8, mock.refs.leaseTerms);
+        state.refs.posts = pickSettledValue(results, 9, mock.refs.posts);
     }
 
     async function ensureCities(provinceId) {
@@ -537,7 +537,15 @@
         }
 
         if (!state.caches.citiesByProvince[key]) {
-            state.caches.citiesByProvince[key] = await request(`/admin/region/city/listByProvinceId?id=${provinceId}`);
+            try {
+                const cities = await request(`/admin/region/city/listByProvinceId?id=${provinceId}`);
+                state.caches.citiesByProvince[key] = Array.isArray(cities) && cities.length
+                    ? cities
+                    : getMockCities(key);
+            } catch (error) {
+                if (!shouldFallback(error)) throw error;
+                state.caches.citiesByProvince[key] = getMockCities(key);
+            }
         }
 
         return clone(state.caches.citiesByProvince[key] || []);
@@ -552,7 +560,15 @@
         }
 
         if (!state.caches.districtsByCity[key]) {
-            state.caches.districtsByCity[key] = await request(`/admin/region/district/listByCityId?id=${cityId}`);
+            try {
+                const districts = await request(`/admin/region/district/listByCityId?id=${cityId}`);
+                state.caches.districtsByCity[key] = Array.isArray(districts) && districts.length
+                    ? districts
+                    : getMockDistricts(key);
+            } catch (error) {
+                if (!shouldFallback(error)) throw error;
+                state.caches.districtsByCity[key] = getMockDistricts(key);
+            }
         }
 
         return clone(state.caches.districtsByCity[key] || []);
@@ -615,21 +631,20 @@
 
     async function loadSummary() {
         let summary = computeMockSummary();
+        let intro = "";
 
-        if (!isDemoMode()) {
+        if (isDemoMode()) {
+            intro = `当前处于演示模式：${state.demoReason || "使用本地示例数据进行功能演示。"}`;
+        } else {
             try {
                 summary = await request("/admin/dashboard/summary");
+                intro = "当前已接入真实后端与数据库，可直接演示公寓、房间、后台账号的查询与维护。";
             } catch (error) {
                 if (!shouldFallback(error)) throw error;
-                enableDemo(error.message);
-                await loadCommonRefs();
                 summary = computeMockSummary();
+                intro = `当前已接入真实后端与数据库，统计卡片暂时使用本地汇总；${normalizeReason(error.message)}`;
             }
         }
-
-        const intro = isDemoMode()
-            ? `当前处于演示模式：${state.demoReason || "使用本地示例数据进行功能演示。"}`
-            : `当前已接入真实后端与数据库，可直接演示公寓、房间、后台账号的查询与维护。`;
 
         $("#summaryIntro").textContent = intro;
         renderSummaryCards(summary);
@@ -695,9 +710,14 @@
                 await window.AdminCrud.bootstrap();
             }
         } catch (error) {
-            if (!forceDemo && shouldFallback(error)) {
+            if (!forceDemo && state.token === DEMO_TOKEN && shouldFallback(error)) {
                 enableDemo(error.message, true);
                 return bootstrap(true);
+            }
+
+            if (error && error.httpStatus !== 401) {
+                $("#loginMessage").textContent = normalizeReason(error.message);
+                return;
             }
 
             localStorage.removeItem(STORAGE_KEY);
@@ -746,7 +766,12 @@
 
         if (state.token) {
             if (state.token === DEMO_TOKEN) {
-                enableDemo("当前使用本地演示数据。");
+                localStorage.removeItem(STORAGE_KEY);
+                state.token = "";
+                disableDemo();
+                setLoginVisible(true);
+                $("#loginMessage").textContent = "检测到旧的演示登录信息，请重新登录真实后台账号。";
+                return;
             }
             setLoginVisible(false);
             await bootstrap();

@@ -11,7 +11,7 @@
                ifnull(tc.cnt, 0) - ifnull(cc.cnt, 0) free_room_count
         from
             (select id,name,introduction,district_id,district_name,city_id,city_name,province_id,
-                     province_name,ddress_detail,latitude,longitude,phone,s_release
+                     province_name,address_detail,latitude,longitude,phone,is_release
               from apartment_info
                 <where>
                     is_deleted=0
